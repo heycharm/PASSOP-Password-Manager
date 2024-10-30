@@ -6,19 +6,21 @@ const { MongoClient } = require('mongodb');
 const bodyparser = require('body-parser')
 const cors = require('cors')
 const router = require("./router/auth-router")
+const connectDb = require("./utlis/db"); 
+
 
 // Connection URL
-const url = 'mongodb://localhost:27017';
-const client = new MongoClient(url);
+// const url = 'mongodb://localhost:27017';
+// const client = new MongoClient(url);
 
 // Database Name
 const dbName = 'passop';
-console.log(process.env.MONGO_URI)
+console.log(process.env.MONGODB_URI)
 const port = 3000
 app.use(bodyparser.json())
 app.use("/api/auth/", router)
 
-client.connect();
+// client.connect();
 
 
 //GET ALL THE PASSWORD
@@ -46,6 +48,9 @@ app.delete('/', async(req, res) => {
     res.send({success:true, result:findResult})
 })
 
+console.log("connectDb:", connectDb); 
+connectDb().then(()=> {
 app.listen(port, () => {
     console.log(`Example app listening on http://localhost:${port}`)
 })
+});
