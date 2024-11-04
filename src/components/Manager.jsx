@@ -9,7 +9,8 @@ const Manager = () => {
     const [passwordArray, setPasswordArray] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [updatedData, setUpdatedData] = useState({});
-    
+    const baseURL = "https://passopbackend-m9zx032s8-heycharms-projects.vercel.app";
+
     const getPasswords = async () => {
         const userId = sessionStorage.getItem('userId');
         if (!userId) {
@@ -17,7 +18,7 @@ const Manager = () => {
             return;
         }
         try {
-            const req = await fetch("http://localhost:3000/api/passwords", {
+            const req = await fetch(`${baseURL}/api/passwords`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include"
@@ -43,13 +44,13 @@ const Manager = () => {
             const payload = { ...form };
             try {
                 const response = form.id
-                    ? await fetch(`http://localhost:3000/api/passwords/${form.id}`, { // Use the ID for updating
+                    ? await fetch(`${baseURL}/api/passwords/${form.id}`, { // Use the ID for updating
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include",
                         body: JSON.stringify(payload),
                     })
-                    : await fetch("http://localhost:3000/api/passwords", {
+                    : await fetch(`${baseURL}/api/passwords`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include",
@@ -76,7 +77,7 @@ const Manager = () => {
         if (!confirmDelete) return;
 
         try {
-            const response = await fetch(`http://localhost:3000/api/passwords/${id}`, {
+            const response = await fetch(`${baseURL}/api/passwords/${id}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -101,7 +102,7 @@ const Manager = () => {
         console.log("Updating with:", updatedData); // Log the updated data for debugging
 
         try {
-            const response = await fetch(`http://localhost:3000/api/passwords/${selectedId}`, {
+            const response = await fetch(`${baseURL}/api/passwords/${selectedId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
