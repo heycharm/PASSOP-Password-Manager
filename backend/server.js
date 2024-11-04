@@ -9,11 +9,10 @@ const cors = require('cors');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 // CORS Options
 const corsOptions = {
-    origin: process.env.FRONTEND_URL ,
+    origin: process.env.FRONTEND_URL,
     credentials: true,
 };
 app.use(cors(corsOptions));
@@ -39,8 +38,8 @@ app.use('/api/passwords', passwordRoutes);
 // Start server and connect to DB
 connectDb()
     .then(() => {
-        app.listen(port, () => {
-            console.log(`Server running on ${process.env.NODE_ENV === 'production' ? 'production' : 'development'} mode at http://localhost:${port}`);
+        app.listen(process.env.PORT || 3000, () => {
+            console.log(`Server running in ${process.env.NODE_ENV} mode.`);
         });
     })
     .catch(err => {
