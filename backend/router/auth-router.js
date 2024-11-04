@@ -43,5 +43,15 @@ router.post('/registration', async (req, res) => {
      }
  });
  
-
+ const home = async (req, res) => {
+     try {
+         res.status(200).send("welcome to mern app");
+     } catch (error) {
+         console.log(error);
+         res.status(500).send("Internal Server Error");
+     }
+ };
+ 
+ // Define the route for the home function
+ router.get('/', home); 
 module.exports = router;

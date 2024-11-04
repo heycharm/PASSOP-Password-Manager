@@ -7,7 +7,6 @@ const home = async (req, res) => {
     console.log(error);
   }
 };
-
 // REGISTRATION LOGIC
 const register = async (req, res) => {
     try {
