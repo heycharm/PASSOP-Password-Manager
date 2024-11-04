@@ -1,17 +1,16 @@
-const mongoose = require("mongoose");
-
-// const URI = "mongodb://127.0.0.1:27017/mern_admin_panel";
-const URI = process.env.MONGODB_URI;
-// console.log(URI);
+const mongoose = require('mongoose');
 
 const connectDb = async () => {
-  try {
-    await mongoose.connect(URI);
-    console.log("connection successful to DB");
-  } catch (error) {
-    console.error("database connection fail");
-    process.exit(0);
-  }
+    try {
+        await mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("Connected to MongoDB Atlas");
+    } catch (error) {
+        console.error("Error connecting to MongoDB Atlas:", error);
+        throw error; // This will cause the server to fail to start if the connection fails
+    }
 };
 
-module.exports = connectDb;
+module.exports = { connectDb };

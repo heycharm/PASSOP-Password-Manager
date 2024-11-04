@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import Resgistrationform from './components/Resgistrationform'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Loginform from './components/Loginform'
+import UserPasswords from './components/Userpasswords';
 
 function App() { 
 
@@ -18,7 +19,7 @@ function App() {
         <Route path="/login" element={ <Loginform />}/>
         <Route path="/registration" element={ <Resgistrationform />}/>
         <Route path="/main" element={ <Manager/>}/>
-       
+        <Route path="/passwords" element={<UserPasswords />} />
         {/* <div className="bg-green-50 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"> */}
 
        {/* <Manager/>  */}

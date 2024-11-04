@@ -1,56 +1,48 @@
-const express = require('express')
-const app = express()
-const dotenv = require('dotenv')
-dotenv.config()
-const { MongoClient } = require('mongodb');
-const bodyparser = require('body-parser')
-const cors = require('cors')
-const router = require("./router/auth-router")
-const connectDb = require("./utlis/db"); 
+const express = require('express');
+const dotenv = require('dotenv');
+const { connectDb } = require('./utlis/db');
+const authRoutes = require('./router/auth-router');
+const passwordRoutes = require('./router/password-routes');
+const session = require('express-session');
+const cors = require('cors');
 
+dotenv.config();
 
-// Connection URL
-// const url = 'mongodb://localhost:27017';
-// const client = new MongoClient(url);
+const app = express();
+const port = process.env.PORT || 3000;
 
-// Database Name
-const dbName = 'passop';
-console.log(process.env.MONGODB_URI)
-const port = 3000
-app.use(bodyparser.json())
-app.use("/api/auth/", router)
+// CORS Options
+const corsOptions = {
+    origin: process.env.FRONTEND_URL ,
+    credentials: true,
+};
+app.use(cors(corsOptions));
 
-// client.connect();
+app.use(express.json());
 
+// Session configuration
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+    }
+}));
 
-//GET ALL THE PASSWORD
-app.get('/', async(req, res) => {
-    const db = client.db(dbName)
-    const collection = db.collection('passwords')
-    const findResult = await collection.find({}).toArray();
-    res.json(findResult)
-})
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/passwords', passwordRoutes);
 
-//SAVE ALL THE PASSWORD
-app.post('/', async(req, res) => {
-    const password =req.body
-    const db = client.db(dbName)
-    const collection = db.collection('passwords')
-    const findResult = await collection.insertOne(password);
-    res.send({success:true, result:findResult})
-})
-//Delete THE PASSWORD BY ID
-app.delete('/', async(req, res) => {
-    const password =req.body
-    const db = client.db(dbName)
-    const collection = db.collection('passwords')
-    const findResult = await collection.deleteOne(password);
-    res.send({success:true, result:findResult})
-})
-
-console.log("connectDb:", connectDb); 
-connectDb().then(()=> {
-app.listen(port, () => {
-    console.log(`Example app listening on http://localhost:${port}`)
-})
-});
+// Start server and connect to DB
+connectDb()
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server running on ${process.env.NODE_ENV === 'production' ? 'production' : 'development'} mode at http://localhost:${port}`);
+        });
+    })
+    .catch(err => {
+        console.error("Failed to connect to the database", err);
+    });
