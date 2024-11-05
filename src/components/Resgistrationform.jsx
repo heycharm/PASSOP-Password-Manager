@@ -35,7 +35,7 @@ const RegistrationForm = () => {
     console.log('Submitting form with data:', formData); // Log the data being sent
   
     try {
-      const response = await axios.post('https://passopbackend-m9zx032s8-heycharms-projects.vercel.app/api/auth/registration', formData);
+      const response = await axios.post('/api/auth/registration', formData);
       setSuccess('Registration successful!');
       setError('');
       // Reset form or redirect user as needed
