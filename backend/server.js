@@ -13,7 +13,8 @@ const app = express();
 
 // CORS Options
 const corsOptions = {
-    origin: process.env.FRONTEND_URL, // Should be set to your frontend URL in the environment variables
+    origin: process.env.FRONTEND_URL,
+    methods:["POST", "GET"], // Should be set to your frontend URL in the environment variables
     credentials: true, // Allow credentials to be included in CORS requests
 };
 
@@ -36,6 +37,9 @@ app.use(session({
 }));
 
 // Define routes for authentication and password management
+app.get("/", (req,res)=>{
+    res.json("Hello")
+})
 app.use('/api/auth', authRoutes);
 app.use('/api/passwords', passwordRoutes);
 
