@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "proxy": "https://passopbackend-m9zx032s8-heycharms-projects.vercel.app",
+  "proxy": "https://passop-api-heycharm.vercel.app/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
