@@ -9,7 +9,7 @@ const Manager = () => {
     const [passwordArray, setPasswordArray] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [updatedData, setUpdatedData] = useState({});
-    const baseURL = "https://passop-api-heycharm.vercel.app/";
+    const baseURL = "https://passop-api-heycharm.vercel.app";
 
     const getPasswords = async () => {
         const userId = sessionStorage.getItem('userId');
