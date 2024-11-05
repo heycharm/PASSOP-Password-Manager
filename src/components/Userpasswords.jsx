@@ -8,7 +8,7 @@ const UserPasswords = () => {
     useEffect(() => {
         const fetchPasswords = async () => {
             try {
-                const response = await axios.get('/api/passwords', { withCredentials: true });
+                const response = await axios.get('https://passop-api-heycharm.vercel.app/api/passwords', { withCredentials: true });
                 setPasswords(response.data);
             } catch (error) {
                 console.error("Error fetching passwords:", error);
