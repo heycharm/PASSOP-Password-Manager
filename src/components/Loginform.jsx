@@ -19,7 +19,7 @@ const LoginForm = () => {
       );
 console.log(response)
       // Store the JWT token in localStorage after a successful login
-      const token = Cookies.get('token'); // Ensure your backend returns a token field in the response
+      const token = response.data.token;  // Ensure your backend returns a token field in the response
       console.log(token);
       localStorage.setItem('token', token);
 
