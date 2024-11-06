@@ -15,7 +15,7 @@ const Manager = () => {
     // Helper to get the token from localStorage
     const getToken = () => {
         const token = localStorage.getItem('token');
-        console.log("Token from local storage:", token); // Debugging line
+        // console.log("Token from local storage:", token); // Debugging line
         return token;
     };
     
