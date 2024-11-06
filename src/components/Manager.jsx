@@ -12,7 +12,7 @@ const Manager = () => {
     const [updatedData, setUpdatedData] = useState({});
     const baseURL = "https://passop-api-heycharm.vercel.app";
 
-    // Helper to get the token from localStorage
+   
     const getToken = () => {
         const token = localStorage.getItem('token');
         // console.log("Token from local storage:", token); // Debugging line

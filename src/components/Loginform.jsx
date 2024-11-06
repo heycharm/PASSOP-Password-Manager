@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Cookies from 'js-cookie';
+
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -18,15 +18,14 @@ const LoginForm = () => {
         { email, password }
       );
 console.log(response)
-      // Store the JWT token in localStorage after a successful login
-      const token = response.data.token;  // Ensure your backend returns a token field in the response
+     
+      const token = response.data.token; 
       // console.log(token);
       localStorage.setItem('token', token);
 
-      // Optionally, store user details if returned from backend
+      
       sessionStorage.setItem('userId', response.data.user._id);
 
-      // Show success toast and navigate to main page
       toast.success("Login successful! Redirecting...");
       setTimeout(() => {
         navigate('/main');
