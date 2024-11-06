@@ -3,8 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const Loginform = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -12,26 +16,27 @@ const Loginform = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://passop-api-heycharm.vercel.app/api/auth/login', { email, password }, {
-        withCredentials: true // Include credentials for session
-      });
-      console.log(response.data);
+      const response = await axios.post(
+        'https://passop-api-heycharm.vercel.app/api/auth/login',
+        { email, password }
+      );
 
-      // Store user ID in sessionStorage after successful login
-      sessionStorage.setItem('userId', response.data.user._id); // Adjust according to your response structure
+      // Store the JWT token in localStorage after a successful login
+      const token = response.data.token; // Ensure your backend returns a token field in the response
+      localStorage.setItem('token', token);
 
-      // Show success toast
+      // Optionally, store user details if returned from backend
+      sessionStorage.setItem('userId', response.data.user._id);
+
+      // Show success toast and navigate to main page
       toast.success("Login successful! Redirecting...");
-
-      // Redirect to the main page on successful login
       setTimeout(() => {
         navigate('/main');
-      }, 2000); // Redirect after 2 seconds to allow time for the toast to display
-
+      }, 2000);
     } catch (error) {
       if (error.response && error.response.data) {
         console.error("Error logging in:", error.response.data);
-        toast.error(error.response.data.msg); // Show error message to the user
+        toast.error(error.response.data.msg);
       } else {
         console.error("Error logging in:", error.message);
         toast.error("An error occurred. Please try again.");

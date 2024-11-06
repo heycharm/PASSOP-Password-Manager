@@ -11,17 +11,22 @@ const Manager = () => {
     const [updatedData, setUpdatedData] = useState({});
     const baseURL = "https://passop-api-heycharm.vercel.app";
 
+    // Helper to get the token from localStorage
+    const getToken = () => localStorage.getItem('token');
+
     const getPasswords = async () => {
-        const userId = sessionStorage.getItem('userId');
-        if (!userId) {
+        const token = getToken();
+        if (!token) {
             toast.error("User not logged in");
             return;
         }
         try {
             const req = await fetch(`${baseURL}/api/passwords`, {
                 method: "GET",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include"
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, // Include JWT in Authorization header
+                }
             });
             const passwords = await req.json();
             if (Array.isArray(passwords)) setPasswordArray(passwords);
@@ -41,26 +46,33 @@ const Manager = () => {
 
     const savePassword = async () => {
         if (form.site && form.username && form.password) {
+            const token = getToken();
+            if (!token) return toast.error("User not logged in");
+
             const payload = { ...form };
             try {
                 const response = form.id
-                    ? await fetch(`${baseURL}/api/passwords/${form.id}`, { // Use the ID for updating
+                    ? await fetch(`${baseURL}/api/passwords/${form.id}`, {
                         method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                        },
                         body: JSON.stringify(payload),
                     })
                     : await fetch(`${baseURL}/api/passwords`, {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                        },
                         body: JSON.stringify(payload),
                     });
-    
+
                 if (response.ok) {
-                    await getPasswords(); // Refresh the password list after saving
+                    await getPasswords();
                     toast.success(form.id ? "Password updated successfully" : "Password saved successfully");
-                    setForm({ site: "", username: "", password: "", id: null }); // Clear form after save
+                    setForm({ site: "", username: "", password: "", id: null });
                 } else {
                     throw new Error("Failed to save password");
                 }
@@ -76,11 +88,16 @@ const Manager = () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this password?");
         if (!confirmDelete) return;
 
+        const token = getToken();
+        if (!token) return toast.error("User not logged in");
+
         try {
             const response = await fetch(`${baseURL}/api/passwords/${id}`, {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                }
             });
 
             if (response.ok) {
@@ -90,22 +107,22 @@ const Manager = () => {
                 throw new Error("Failed to delete password");
             }
         } catch (error) {
-            console.log('Deleting password with ID:', id);
             toast.error("Error deleting password");
         }
     };
 
     const editPassword = async () => {
-        if (!selectedId) return; // Don't proceed if no ID is selected
+        if (!selectedId) return;
 
-        console.log("Edit ID:", selectedId); // Log the ID for debugging
-        console.log("Updating with:", updatedData); // Log the updated data for debugging
+        const token = getToken();
+        if (!token) return toast.error("User not logged in");
 
         try {
             const response = await fetch(`${baseURL}/api/passwords/${selectedId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(updatedData),
             });
@@ -116,16 +133,14 @@ const Manager = () => {
                 throw new Error(`Failed to update password: ${data.message}`);
             }
 
-            // Update local state to reflect the updated password
             setPasswordArray((prev) =>
                 prev.map((password) => (password._id === selectedId ? { ...password, ...updatedData } : password))
             );
 
             toast.success("Password updated successfully");
-            console.log("Password updated successfully:", data);
-            setSelectedId(null); // Reset the selected ID after edit
+            setSelectedId(null);
         } catch (error) {
-            console.error("Failed to update password:", error);
+            toast.error("Failed to update password");
         }
     };
 
@@ -135,7 +150,7 @@ const Manager = () => {
             site: passwordToEdit.site,
             username: passwordToEdit.username,
             password: passwordToEdit.password,
-            id: passwordToEdit._id // Keep the ID to send with the update
+            id: passwordToEdit._id,
         });
         setSelectedId(id);
     };
