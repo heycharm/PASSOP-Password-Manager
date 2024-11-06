@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
 
 const Manager = () => {
     const ref = useRef();
@@ -12,15 +13,10 @@ const Manager = () => {
     const baseURL = "https://passop-api-heycharm.vercel.app";
 
     // Helper to get the token from localStorage
-    const getToken = () => {
-        const token = localStorage.getItem('token');
-        console.log("Token from local storage:", token); // Debugging line
-        return token;
-    };
     
 
     const getPasswords = async () => {
-        const token = getToken();
+        const token = Cookies.get('token');
         if (!token) {
             toast.error("User not logged in");
             return;
