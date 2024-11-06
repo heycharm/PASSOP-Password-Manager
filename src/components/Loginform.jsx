@@ -20,7 +20,7 @@ const LoginForm = () => {
         'https://passop-api-heycharm.vercel.app/api/auth/login',
         { email, password }
       );
-
+console.log(response)
       // Store the JWT token in localStorage after a successful login
       const token = response.data.token; // Ensure your backend returns a token field in the response
       localStorage.setItem('token', token);
