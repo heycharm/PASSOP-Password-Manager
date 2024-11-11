@@ -9,3 +9,6 @@ Currently, two official plugins are available:
 
 # PASSOP - Password Manager API 
 - https://github.com/heycharm/PASSOP-Password-Manager-API
+
+# Live Website
+- https://passop-heycharm.vercel.app/
